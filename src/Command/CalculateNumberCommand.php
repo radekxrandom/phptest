@@ -15,7 +15,7 @@ class CalculateNumberCommand extends Command
     protected function configure()
     {
         $this
-        ->addArgument('number', InputArgument::REQUIRED, 'Number n.');
+        ->addArgument('number', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Number n.');
     }
 
 
@@ -38,11 +38,14 @@ class CalculateNumberCommand extends Command
             }
 
             $i = ($n-1)/2;
+
             return countAn($i) + countAn($i+1);
         }
+
         function getHighest($a)
         {
             $highest = 0;
+
             for ($i=0; $i<$a; $i++) {
                 $result = countAn($a);
 
@@ -52,9 +55,17 @@ class CalculateNumberCommand extends Command
                 }
                 $a--;
             }
+
             return $highest;
         }
-        return getHighest($number);
+
+        //create and return array with highest values
+        $arr = array();
+        foreach ($number as $val) {
+            array_push($arr, getHighest($val));
+        }
+
+        return $arr;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

@@ -1,86 +1,91 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Hello MainController!{% endblock %}
-
+{% block title %}Hello MainController!
+{% endblock %}
 {% block body %}
+
 <style>
-@import url('https://fonts.googleapis.com/css?family=Lato&display=swap');
-    body{
-      font-family: 'Lato', sans-serif !important;
-    }
-    .wrapper{
-      margin: auto;
-width: fit-content;
-margin-top: 3%;
-    }
-    .hello{
-      font-size: 6rem;
-    }
-    .inptnumbers{
-      margin-top: -3%;
-      margin-bottom: 1%;
-      border-radius: 5px;
-      border-width: 0.3px;
-      box-shadow: -6px -2px 7px -1px rgba(0,0,0,0.23);
-      width: 100%;
-min-height: 20vh;
-font-size: 1.3rem;
-    }
-    .inptnumbers:before{
-      display:none;
-    }
-    .btn{
-      width: 100%;
-      min-height: 4vh;
-      max-height: 6vh;
-    }
-    .tablestyle{
-      box-shadow: -6px -2px 7px -1px rgba(0,0,0,0.23);
-      text-align: center;
-      width: 100%;
-      margin-top: 5%;
-    }
-    .tabletitlecenter{
-      text-align: center;
-    }
-    .required{
-      display: none;
-    }
+  @import url('https://fonts.googleapis.com/css?family=Lato &display=swap');
+  body {
+    font-family: 'Lato', sans-serif !important;
+  }
+  .wrapper {
+    margin: 3% auto auto;
+    width: fit-content;
+  }
+  .hello {
+    font-size: 6rem;
+  }
+  .inptnumbers {
+    margin-top: -3%;
+    margin-bottom: 1%;
+    border-radius: 5px;
+    border-width: 0.3px;
+    box-shadow: -6px -2px 7px -1px rgba(0, 0, 0, 0.23);
+    width: 100%;
+    min-height: 20vh;
+    font-size: 1.3rem;
+  }
+  .btn {
+    width: 100%;
+    min-height: 4vh;
+    max-height: 6vh;
+  }
+  .tablestyle {
+    box-shadow: -6px -2px 7px -1px rgba(0, 0, 0, 0.23);
+    text-align: center;
+    width: 100%;
+    margin-top: 5%;
+    border-radius: 5px;
+  }
+  .tabletitlecenter {
+    text-align: center;
+  }
+  .required {
+    display: none;
+    /* it removes the textarea description  */
+  }
 </style>
 
 <div class="wrapper">
+
   <div class='title'>
-    <h1 class='hello'>Hello there! ✅</h1>
+    <h1 class='hello'>Hello there! ✅
+    </h1>
   </div>
+
   <div class='form'>
-   {{form_start(form)}}
-   {{form_row(form.numbers, {'attr': {'class': 'inptnumbers'}})}}
-   {{form_row(form.submit, {'attr': {'class': 'btn btn-success'}} )}}
-   {{form_end(form)}}
- </div>
- <div class='result'>
-   {%if data %}
-   <table class="pure-table pure-table-bordered tablestyle">
-   <thead>
+    {{ form_start(form) }}
+    {{ form_row(form.numbers, {'attr': {'class': 'inptnumbers' }}) }}
+    {{ form_row(form.submit, {'attr': {'class': 'btn btn-success' }}) }}
+    {{ form_end(form) }}
+  </div>
+
+  <div class='result'>
+    <table class="pure-table pure-table-bordered tablestyle">
+
+      <thead>
         <tr class='tabletitlecenter'>
-            <th>INPUT</th>
-            <th>OUTPUT</th>
+          <th>INPUT</th>
+          <th>OUTPUT</th>
         </tr>
-    </thead>
-     <tbody>
-   {%for d in data%}
-   {%if loop.index0%2 != 0%} {# on every other row add grey background#}
-        <tr class='pure-table-odd'>
-          {%else%}
-          <tr>
-            {%endif%}
-            <td>{{inputdata[loop.index0]}}</td> {# that loop variable is pretty cool #}
-            <td>{{d}}</td>
+      </thead>
+
+      <tbody>
+        {% for val in calculatedOutput %}
+
+        {# on every other row add different background#}
+        {% if loop.index0%2 != 0 %}
+        <tr class='pure-table-odd'> {% else %} <tr>
+          {% endif %}
+
+          <td>{{ userInput[loop.index0] }}</td>
+          {# that loop variable is pretty cool #}
+          <td>{{ val }}</td>
+
         </tr>
-      {%endfor%}
-        </tbody>
-      </table>
-   {%endif%}
- </div>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </div>
 {% endblock %}
