@@ -15,63 +15,68 @@ class CalculateNumberCommand extends Command
     protected function configure()
     {
         $this
-        ->addArgument('number', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Number n.');
+        ->addArgument('userInput', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'Numbers.');
     }
 
 
-    public function getResults($number)
+    public function calcOutput($userInput)
     {
-        function countAn($n)
+        function calcElementValue($index)
         {
             //for 0 return 0, for 1 and 2 return 1, afterwards use recursion to
             //"reduce" the number and calculate the result
-            if ($n == 0) {
+            if ($index == 0) {
                 return 0;
             }
 
-            if ($n == 1 || $n == 2) {
+            if ($index == 1 || $index == 2) {
                 return 1;
             }
 
-            if ($n % 2 == 0) {
-                return countAn($n/2);
+            if ($index % 2 == 0) {
+                return calcElementValue($index/2);
             }
 
-            $i = ($n-1)/2;
+            $index = ($index-1)/2;
 
-            return countAn($i) + countAn($i+1);
+            return calcElementValue($index) + calcElementValue($index+1);
         }
 
-        function getHighest($a)
+        function highestValueInSequence($n)
         {
-            $highest = 0;
+            $highestValue = 0;
 
-            for ($i=0; $i<$a; $i++) {
-                $result = countAn($a);
-
-                //swap if current result is higher then the biggest previous number
-                if ($result > $highest) {
-                    $highest = $result;
-                }
-                $a--;
+            if (!is_numeric($n)) {
+                return("Value not a number");
+            } elseif ($n == 0) {
+                return("0 is not valid as input");
             }
 
-            return $highest;
+            for ($i=0; $i<$n; $i++, $n--) {
+                $currentElementValue = calcElementValue($n);
+
+                //swap if current result is higher then the biggest previous number
+                if ($currentElementValue > $highestValue) {
+                    $highestValue = $currentElementValue;
+                }
+            }
+
+            return $highestValue;
         }
 
         //create and return array with highest values
-        $arr = array();
-        foreach ($number as $val) {
-            array_push($arr, getHighest($val));
+        $outputArray = array();
+        foreach ($userInput as $n) {
+            array_push($outputArray, highestValueInSequence($n));
         }
 
-        return $arr;
+        return $outputArray;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln('Description');
-        $output->writeln($this->getResults($input->getArgument('number')));
+        $output->writeln($this->calcOutput($input->getArgument('userInput')));
 
         return 0;
     }

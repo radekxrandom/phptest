@@ -19,7 +19,7 @@ class MainController extends AbstractController
         //demanded usage of a form factory
 
         $form = $this->createFormBuilder()
-        ->add('numbers', TextareaType ::class)
+        ->add('userInput', TextareaType ::class)
         ->add('submit', SubmitType::class)
         ->getForm();
 
@@ -30,61 +30,61 @@ class MainController extends AbstractController
             //functions needed to calculate the output
             //btw as I don't have much experience with symfony
             //I am not sure about the placement of these functions
+            //i.e. shouldn't they be methods of MainController?
 
-            //this one calculates the value of a given point in the sequence
-            function countAn($n)
+            function calcElementValue($index)
             {
-                if ($n == 0) {
+                //for 0 return 0, for 1 and 2 return 1, afterwards use recursion to
+                //"reduce" the number and calculate the result
+                if ($index == 0) {
                     return 0;
                 }
 
-                if ($n == 1 || $n == 2) {
+                if ($index == 1 || $index == 2) {
                     return 1;
                 }
 
-                if ($n % 2 == 0) {
-                    return countAn($n/2);
+                if ($index % 2 == 0) {
+                    return calcElementValue($index/2);
                 }
 
-                $i = ($n-1)/2;
-                return countAn($i) + countAn($i+1);
+                $index = ($index-1)/2;
+
+                return calcElementValue($index) + calcElementValue($index+1);
             }
 
-            //the second one calculates which particular point in the sequence
-            //has the highest value. parameter = n where A0, A1, ..., An.
-            function getHighest($a)
+
+            function highestValueInSequence($n)
             {
-                $highest = 0;
-
-                for ($i=0; $i<$a; $i++) {
-                    $result = countAn($a);
-
-                    if ($result > $highest) {
-                        $highest = $result;
-                    }
-
-                    $a--;
+                if ($n == 0) {
+                    return "Input not valid.";
                 }
 
-                return $highest;
+                $highestValue = 0;
+                for ($i=0; $i<$n; $i++, $n--) {
+                    $currentElementValue = calcElementValue($n);
+                    if ($currentElementValue > $highestValue) {
+                        $highestValue = $currentElementValue;
+                    }
+                }
+
+                return $highestValue;
             }
 
             //get form data and extract numbers from each line
             $data = $form->getData();
 
-            $values = trim($data['numbers']);
-            $pach = explode("\n", $values);
-            $trimmedInput = array_filter($pach, 'trim');
+            $values = trim($data['userInput']);
+            $trimmedInputArr = explode("\n", $values);
 
-            //$arr - array with output vals, $secarr - one with user input
             $calculatedOutput = array();
             $userInput = array();
 
             //add extracted numbers to the arrays
-            foreach ($trimmedInput as $val) {
+            foreach ($trimmedInputArr as $val) {
                 //in the first case calculate the output before adding it to the array
-                array_push($calculatedOutput, getHighest((int)$val));
-                array_push($userInput, (int)$val);
+                array_push($calculatedOutput, highestValueInSequence((int)$val));
+                array_push($userInput, $val);
             }
 
             //render template passing arrays with user input and calculated output
