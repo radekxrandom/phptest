@@ -7,6 +7,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType ;
+use App\Util\CalculateOutput;
 
 class MainController extends AbstractController
 {
@@ -27,50 +28,6 @@ class MainController extends AbstractController
 
         if ($form->isSubmitted()) {
 
-            //functions needed to calculate the output
-            //btw as I don't have much experience with symfony
-            //I am not sure about the placement of these functions
-            //i.e. shouldn't they be methods of MainController?
-
-            function calcElementValue($index)
-            {
-                //for 0 return 0, for 1 and 2 return 1, afterwards use recursion to
-                //"reduce" the number and calculate the result
-                if ($index == 0) {
-                    return 0;
-                }
-
-                if ($index == 1 || $index == 2) {
-                    return 1;
-                }
-
-                if ($index % 2 == 0) {
-                    return calcElementValue($index/2);
-                }
-
-                $index = ($index-1)/2;
-
-                return calcElementValue($index) + calcElementValue($index+1);
-            }
-
-
-            function highestValueInSequence($n)
-            {
-                if ($n == 0) {
-                    return "Input not valid.";
-                }
-
-                $highestValue = 0;
-                for ($i=0; $i<$n; $i++, $n--) {
-                    $currentElementValue = calcElementValue($n);
-                    if ($currentElementValue > $highestValue) {
-                        $highestValue = $currentElementValue;
-                    }
-                }
-
-                return $highestValue;
-            }
-
             //get form data and extract numbers from each line
             $data = $form->getData();
 
@@ -80,10 +37,13 @@ class MainController extends AbstractController
             $calculatedOutput = array();
             $userInput = array();
 
+            //import class from src/Util
+            $CalculateOutput = new CalculateOutput();
+
             //add extracted numbers to the arrays
             foreach ($trimmedInputArr as $val) {
                 //in the first case calculate the output before adding it to the array
-                array_push($calculatedOutput, highestValueInSequence((int)$val));
+                array_push($calculatedOutput, $CalculateOutput -> highestValueInSequence((int)$val));
                 array_push($userInput, $val);
             }
 
