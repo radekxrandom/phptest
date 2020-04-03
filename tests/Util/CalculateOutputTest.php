@@ -11,14 +11,14 @@ class CalculateOutputTest extends TestCase
     public function testHighestValueInSequence()
     {
         $calculate = new CalculateOutput();
-        $result = $calculate->highestValueInSequence(10);
+        $result = $calculate->calcHighestValue(10);
 
         $this->assertEquals(4, $result);
 
         //test invalid input
 
-        $result1 = $calculate->highestValueInSequence('test');
-        $result2 = $calculate->highestValueInSequence(-10);
+        $result1 = $calculate->calcHighestValue('test');
+        $result2 = $calculate->calcHighestValue(-10);
 
         $this->assertEquals("Input not valid.", $result1);
         $this->assertEquals("Input not valid.", $result2);
