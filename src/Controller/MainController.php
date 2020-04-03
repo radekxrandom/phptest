@@ -43,7 +43,7 @@ class MainController extends AbstractController
             //add extracted numbers to the arrays
             foreach ($trimmedInputArr as $val) {
                 //in the first case calculate the output before adding it to the array
-                array_push($calculatedOutput, $CalculateOutput -> highestValueInSequence((int)$val));
+                array_push($calculatedOutput, $CalculateOutput -> calcHighestValue((int)$val));
                 array_push($userInput, $val);
             }
 
