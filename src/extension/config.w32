@@ -1,4 +1,4 @@
-ARG_ENABLE("calculate", "for calculate support", "no");
-if (PHP_CALCULATE != "no") {
-    EXTENSION("calculate", "calculate.c", true);
+ARG_ENABLE("calcout", "for calculate support", "no");
+if (PHP_CALCOUT != "no") {
+    EXTENSION("calcout", "php_calcout.c", true);
 }

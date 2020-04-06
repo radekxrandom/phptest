@@ -21,6 +21,10 @@ class CalculateNumberCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $module = 'calcout';
+        $functions = get_extension_funcs($module);
+        $output->writeln($functions('calcout_calc'));
+
         $output->writeln('Description');
         $calc = new CalculateOutput();
         $output->writeln($calc->outputInputArray($input->getArgument('userInput')));
