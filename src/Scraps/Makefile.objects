@@ -1,8 +1,0 @@
-php_calcout.lo: /Users/patrycjastepczak/desktop/project/phptest/src/extension/php_calcout.c
-	$(LIBTOOL) --mode=compile $(CC)  -I. -I/Users/patrycjastepczak/desktop/project/phptest/src/extension $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS)  -c /Users/patrycjastepczak/desktop/project/phptest/src/extension/php_calcout.c -o php_calcout.lo 
-$(phplibdir)/php_calcout.la: ./php_calcout.la
-	$(LIBTOOL) --mode=install cp ./php_calcout.la $(phplibdir)
-
-./php_calcout.la: $(shared_objects_php_calcout) $(PHP_CALCOUT_SHARED_DEPENDENCIES)
-	$(LIBTOOL) --mode=link $(CC) $(COMMON_FLAGS) $(CFLAGS_CLEAN) $(EXTRA_CFLAGS) $(LDFLAGS) -o $@ -export-dynamic -avoid-version -prefer-pic -module -rpath $(phplibdir) $(EXTRA_LDFLAGS) $(shared_objects_php_calcout) $(PHP_CALCOUT_SHARED_LIBADD)
-
