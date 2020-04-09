@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <php.h>
 #include "php_calcout.h"
+typedef unsigned long ulong;
+
 
 ZEND_BEGIN_ARG_INFO_EX(arginfo_calcout_calc, 0, 0, 1)
 ZEND_ARG_INFO(0, lval)
@@ -34,39 +36,48 @@ zend_module_entry calcout_module_entry = {
 ZEND_GET_MODULE(calcout)
 
 
+ long max(long *seq, int len){
+    long highest = 0;
+
+    while(--len){
+        if(highest < *(seq+len)) highest = *(seq+len);
+    }
+
+    return highest;
+}
+
+void calc_seq(long *seq, int len){
+    int i = *(seq+1) = *seq = 1;
+
+    while( (i<<1)+1 < len) {
+        *(seq+(i<<1))         = *(seq+i)+*(seq+i-1);
+        *(seq+(((i++)<<1)+1)) = *(seq+i-1);
+    }
+
+    if((len%2) != 0){
+        *(seq+(i<<1)) = *(seq+i)+*(seq+i-1);
+    }
+}
+
+long calc_max_in_sec(long *seq, int len){
+    calc_seq(seq, len);
+    return max(seq,len);
+}
+
+
 PHP_FUNCTION(calcout_calc){
 
+
   long lval;
-  long i = 1;
-  long el = 2;
-  long highest = 0;
 
-  if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &lval) == FAILURE){
-    return;
-  }
-
-  //long arr[lval];
-  long *arr;
-  arr = malloc(lval*sizeof(long));
-  arr[lval] = 0;
-  arr[0] = 1;
-  arr[1] = 1;
-
-  while(arr[lval] == 0){
-    long element = arr[i];
-    long precedent = arr[i-1];
-    arr[el] = element + precedent;
-    el++;
-    arr[el] = element;
-    el++;
-    i++;
-  }
-
-  for(long j = 0; j < lval; j++){
-    if(highest < arr[j]){
-      highest = arr[j];
+      if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &lval) == FAILURE){
+      return;
     }
-  }
 
-  RETURN_LONG(highest);
+    // heap allocation
+    long *tab_heap = malloc(sizeof(long) * lval);
+    long highest = calc_max_in_sec(tab, lval);
+    free(tab_heap);
+
+    RETURN_LONG(highest);
 }
